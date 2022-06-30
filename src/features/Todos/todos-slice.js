@@ -5,15 +5,11 @@ import {resetToDefault} from '../Reset/reset-action';
 export const loadTodos = createAsyncThunk(
   '@@todos/load-all',
   async (_, {
-    rejectWithValue
+    rejectWithValue, extra: { api }
   }) => {
     try {
-      const res = await fetch('http://localhost:3001/todos');
-      const data = await res.json();
-  
-      return data;
+      return api.loadTodos();
     } catch(err) {
-      console.log(err);
       return rejectWithValue('Failed to fetch all todos.');
     }
   },
@@ -30,50 +26,23 @@ export const loadTodos = createAsyncThunk(
 
 export const createTodo = createAsyncThunk(
   '@@todos/create-todo',
-  async (title) => {
-    const res = await fetch('http://localhost:3001/todos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({title, completed: false})
-    });
-    
-    return res.json();
+  async (title, { extra: { api }}) => {
+    return api.createTodo(title);
   }
 );
 
 export const toggleTodo = createAsyncThunk(
   '@@todos/toggle-todo',
-  async (id, {getState}) => {
+  async (id, {getState, extra: { api }}) => {
     const todo = getState().todos.entities.find(item => item.id === id);
 
-    const res = await fetch('http://localhost:3001/todos/' + id, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({completed: !todo.completed})
-    })
-
-    const data = await res.json();
-
-    return data;
+    return api.toggleTodo(id, { completed: !todo.completed })
   }
 );
 export const removeTodo = createAsyncThunk(
   '@@todos/remove-todo',
-  async (id) => {
-    const res = await fetch('http://localhost:3001/todos/' + id, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-
-    await res.json();
-
-    return id;
+  async (id, { extra: { api }}) => {
+    return api.removeTodo(id);
   }
 );
 
@@ -111,7 +80,6 @@ const todoSlice = createSlice({
         state.error = null;
       })
       .addMatcher((action) => action.type.endsWith('/rejected'), (state, action) => {
-        console.log(action);
         state.loading = 'idle';
         state.error = action.payload || action.error.message;
       })

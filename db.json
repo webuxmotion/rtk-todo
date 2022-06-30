@@ -1,64 +1,14 @@
 {
   "todos": [
     {
-      "id": 1,
-      "title": "Learn Toolkit",
-      "completed": false
-    },
-    {
-      "id": 2,
-      "title": "Learn React",
-      "completed": true
-    },
-    {
-      "id": 3,
-      "title": "Learn English",
-      "completed": false
-    },
-    {
       "id": 4,
       "title": "Learn Redux",
       "completed": true
     },
     {
-      "id": 5,
-      "title": "Something new",
-      "completed": false
-    },
-    {
       "title": "asdasd",
       "completed": false,
       "id": 6
-    },
-    {
-      "title": "dddd",
-      "completed": false,
-      "id": 7
-    },
-    {
-      "title": "my todo",
-      "completed": false,
-      "id": 8
-    },
-    {
-      "title": "my todo",
-      "completed": false,
-      "id": 9
-    },
-    {
-      "title": "osdfsdff",
-      "completed": false,
-      "id": 10
-    },
-    {
-      "title": "ddddd",
-      "completed": false,
-      "id": 11
-    },
-    {
-      "title": "ddd",
-      "completed": false,
-      "id": 12
     },
     {
       "title": "dddffsdfsdf",
@@ -72,18 +22,13 @@
     },
     {
       "title": "my todo",
-      "completed": false,
+      "completed": true,
       "id": 15
     },
     {
       "title": "dddd",
-      "completed": false,
+      "completed": true,
       "id": 16
-    },
-    {
-      "title": "my new item",
-      "completed": false,
-      "id": 17
     },
     {
       "title": "dfdfdf",
@@ -94,31 +39,6 @@
       "title": "ddd",
       "completed": false,
       "id": 19
-    },
-    {
-      "title": "my todo",
-      "completed": false,
-      "id": 20
-    },
-    {
-      "title": "dddd",
-      "completed": false,
-      "id": 21
-    },
-    {
-      "title": "asdfsadf",
-      "completed": false,
-      "id": 22
-    },
-    {
-      "title": "sd",
-      "completed": false,
-      "id": 23
-    },
-    {
-      "title": "aaaa",
-      "completed": false,
-      "id": 24
     }
   ]
 }
