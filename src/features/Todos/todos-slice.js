@@ -4,11 +4,18 @@ import {resetToDefault} from '../Reset/reset-action';
 
 export const loadTodos = createAsyncThunk(
   '@@todos/load-all',
-  async () => {
-    const res = await fetch('http://localhost:3001/todos');
-    const data = await res.json();
-
-    return data;
+  async (_, {
+    rejectWithValue
+  }) => {
+    try {
+      const res = await fetch('http://localhost:3002/todos');
+      const data = await res.json();
+  
+      return data;
+    } catch(err) {
+      console.log(err);
+      return rejectWithValue('Failed to fetch all todos.');
+    }
   }
 );
 
@@ -93,9 +100,10 @@ const todoSlice = createSlice({
         state.loading = 'loading';
         state.error = null;
       })
-      .addMatcher((action) => action.type.endsWith('/rejected'), (state) => {
+      .addMatcher((action) => action.type.endsWith('/rejected'), (state, action) => {
+        console.log(action);
         state.loading = 'idle';
-        state.error = 'ERROR!';
+        state.error = action.payload || action.error.message;
       })
       .addMatcher((action) => action.type.endsWith('/fulfilled'), (state) => {
         state.loading = 'idle';

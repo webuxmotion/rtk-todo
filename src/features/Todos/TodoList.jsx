@@ -18,8 +18,8 @@ export const TodoList = () => {
       .then((payload) => {
         toast('All Todos were fetched!');
       })
-      .catch(() => {
-        toast('ERROR!');
+      .catch((err) => {
+        toast(err);
       })
   }, [dispatch]);
 
@@ -27,7 +27,7 @@ export const TodoList = () => {
     <>
     <ToastContainer />
       <ul>
-        {error && <h2>Error!</h2>}
+        {error && <h2>{error}</h2>}
         {loading === 'loading' && <h2>Loading...</h2>}
         {loading === 'idle' && !error && todos.map((todo) => {
 
