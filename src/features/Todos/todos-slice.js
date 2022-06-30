@@ -2,6 +2,16 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 
 import {resetToDefault} from '../Reset/reset-action';
 
+export const loadTodos = createAsyncThunk(
+  '@@todos/load-all',
+  async () => {
+    const res = await fetch('http://localhost:3001/todos');
+    const data = await res.json();
+
+    return data;
+  }
+);
+
 export const createTodo = createAsyncThunk(
   '@@todos/create-todo',
   async (title) => {
@@ -17,6 +27,39 @@ export const createTodo = createAsyncThunk(
   }
 );
 
+export const toggleTodo = createAsyncThunk(
+  '@@todos/toggle-todo',
+  async (id, {getState}) => {
+    const todo = getState().todos.entities.find(item => item.id === id);
+
+    const res = await fetch('http://localhost:3001/todos/' + id, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({completed: !todo.completed})
+    })
+
+    const data = await res.json();
+
+    return data;
+  }
+);
+export const removeTodo = createAsyncThunk(
+  '@@todos/remove-todo',
+  async (id) => {
+    const res = await fetch('http://localhost:3001/todos/' + id, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
+
+    await res.json();
+
+    return id;
+  }
+);
 
 const todoSlice = createSlice({
   name: '@@todos',
@@ -25,51 +68,40 @@ const todoSlice = createSlice({
     loading: 'idle', // 'loading' | false
     error: null
   },
-  reducers: {
-    addTodo: {
-      reducer: (state, action) => {
-        state.push(action.payload)
-      },
-      prepare: (data) => {
-        
-        return {
-          payload: data
-        }
-      }
-    },
-    removeTodo: (state, action) => {
-      const id = action.payload;
-      return state.filter((todo) => todo.id !== id);
-    },
-    toggleTodo: (state, action) => {
-      const id = action.payload;
-      const todo = state.find((todo) => todo.id === id);
-      todo.completed = !todo.completed;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(resetToDefault, () => {
         return []
       })
-      .addCase(createTodo.pending, (state, action) => {
+      .addCase(loadTodos.pending, (state, action) => {
         state.loading = 'loading';
         state.error = null;
       })
-      .addCase(createTodo.rejected, (state, action) => {
+      .addCase(loadTodos.rejected, (state) => {
         state.loading = 'idle';
-        state.error = 'Some went wrong!';
+        state.error = 'Something went wrong!'
+      })
+      .addCase(loadTodos.fulfilled, (state, action) => {
+        state.entities = action.payload;
+        state.loading = 'idle';
       })
       .addCase(createTodo.fulfilled, (state, action) => {
-        state.entities.push(action.payload);
-        state.loading = false;
+        state.entities.push(action.payload)
+      })
+      .addCase(toggleTodo.fulfilled, (state, action) => {
+        const updatedTodo = action.payload;
+
+        const index = state.entities.findIndex(todo => todo.id === updatedTodo.id);
+        state.entities[index] = updatedTodo;
+      })
+      .addCase(removeTodo.fulfilled, (state, action) => {
+        state.entities = state.entities.filter(todo => todo.id !== action.payload);
       })
   }
 });
-export const {addTodo, removeTodo, toggleTodo} = todoSlice.actions;
 
 export const todoReducer = todoSlice.reducer;
-
 
 export const selectVisibleTodos = (state, filter) => {
   switch (filter) {
