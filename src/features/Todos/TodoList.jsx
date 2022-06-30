@@ -13,14 +13,11 @@ export const TodoList = () => {
   const {error, loading} = useSelector(state => state.todos);
 
   useEffect(() => {
-    dispatch(loadTodos())
-      .unwrap()
-      .then((payload) => {
-        toast('All Todos were fetched!');
-      })
-      .catch((err) => {
-        toast(err);
-      })
+    const promise = dispatch(loadTodos());
+      
+    return () => {
+      promise.abort();
+    }
   }, [dispatch]);
 
   return (

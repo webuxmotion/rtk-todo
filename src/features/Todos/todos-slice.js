@@ -8,13 +8,22 @@ export const loadTodos = createAsyncThunk(
     rejectWithValue
   }) => {
     try {
-      const res = await fetch('http://localhost:3002/todos');
+      const res = await fetch('http://localhost:3001/todos');
       const data = await res.json();
   
       return data;
     } catch(err) {
       console.log(err);
       return rejectWithValue('Failed to fetch all todos.');
+    }
+  },
+  {
+    condition: (_, { getState, extra }) => {
+      const { loading } = getState().todos;
+
+      if (loading === 'loading') {
+        return false;
+      }
     }
   }
 );
@@ -73,7 +82,8 @@ const todoSlice = createSlice({
   initialState: {
     entities: [],
     loading: 'idle', // 'loading' | false
-    error: null
+    error: null,
+    currentRequestID: null,
   },
   reducers: {},
   extraReducers: (builder) => {
