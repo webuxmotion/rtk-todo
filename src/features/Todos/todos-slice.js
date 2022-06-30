@@ -74,17 +74,8 @@ const todoSlice = createSlice({
       .addCase(resetToDefault, () => {
         return []
       })
-      .addCase(loadTodos.pending, (state, action) => {
-        state.loading = 'loading';
-        state.error = null;
-      })
-      .addCase(loadTodos.rejected, (state) => {
-        state.loading = 'idle';
-        state.error = 'Something went wrong!'
-      })
       .addCase(loadTodos.fulfilled, (state, action) => {
         state.entities = action.payload;
-        state.loading = 'idle';
       })
       .addCase(createTodo.fulfilled, (state, action) => {
         state.entities.push(action.payload)
@@ -97,6 +88,17 @@ const todoSlice = createSlice({
       })
       .addCase(removeTodo.fulfilled, (state, action) => {
         state.entities = state.entities.filter(todo => todo.id !== action.payload);
+      })
+      .addMatcher((action) => action.type.endsWith('/pending'), (state) => {
+        state.loading = 'loading';
+        state.error = null;
+      })
+      .addMatcher((action) => action.type.endsWith('/rejected'), (state) => {
+        state.loading = 'idle';
+        state.error = 'ERROR!';
+      })
+      .addMatcher((action) => action.type.endsWith('/fulfilled'), (state) => {
+        state.loading = 'idle';
       })
   }
 });
