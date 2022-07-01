@@ -1,13 +1,8 @@
 {
   "todos": [
     {
-      "id": 4,
-      "title": "Learn Redux",
-      "completed": true
-    },
-    {
       "title": "asdasd",
-      "completed": false,
+      "completed": true,
       "id": 6
     },
     {
@@ -26,19 +21,9 @@
       "id": 15
     },
     {
-      "title": "dddd",
-      "completed": true,
+      "title": "jijij",
+      "completed": false,
       "id": 16
-    },
-    {
-      "title": "dfdfdf",
-      "completed": false,
-      "id": 18
-    },
-    {
-      "title": "ddd",
-      "completed": false,
-      "id": 19
     }
   ]
 }
